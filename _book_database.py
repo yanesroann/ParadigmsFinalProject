@@ -24,8 +24,8 @@ class _book_database:
         else:
             return None
 
-    def get_movies(self):
-        return [int(x) for x in list(self.movies)]
+    def get_books(self):
+        return [str(x) for x in list(self.books)]
 
     def set_movie(self, mid, movies):
         self.movies[mid] = movies
@@ -117,4 +117,4 @@ class _book_database:
 if __name__ == "__main__":
     bdb = _book_database()
     bdb.load_books('book_files/books.csv')
-    print(bdb.get_book(1))
+    print(bdb.get_books())

@@ -22,12 +22,12 @@ class TestBookDatabase(unittest.TestCase):
                 self.assertEqual(book[1], '2008.0')
                 self.assertEqual(book[2], 'The Hunger Games')
 
-"""        def test_get_movie_null(self):
+        def test_get_book_null(self):
                 self.reset_data()
-                movie = self.mdb.get_movie(20000)
-                self.assertEquals(movie, None)
+                book = self.bdb.get_book(200000000)
+                self.assertEqual(book, None)
 
-        def test_set_movie(self):
+"""        def test_set_movie(self):
                 self.reset_data()
                 movie = self.mdb.get_movie(2)
                 movie[0] = 'ABC'
