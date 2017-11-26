@@ -6,22 +6,23 @@ class TestBookDatabase(unittest.TestCase):
 
         #@classmethod
         #def setUpClass(self):
-        mdb = _movie_database()
+        bdb = _book_database()
 
         def reset_data(self):
                 "reset data is required because we cannot promise an order of test case execution"
-                self.mdb.delete_all_ratings()
-                self.mdb.load_movies('ml-1m/movies.dat')
-                self.mdb.load_users('ml-1m/users.dat')
-                self.mdb.load_ratings('ml-1m/ratings.dat')
+                #self.mdb.delete_all_ratings()
+                self.bdb.load_books('book_files/books.csv')
+                #self.mdb.load_users('ml-1m/users.dat')
+                #self.mdb.load_ratings('ml-1m/ratings.dat')
 
-        def test_get_movie(self):
+        def test_get_book(self):
                 self.reset_data()
-                movie = self.mdb.get_movie(2)
-                self.assertEquals(movie[0], 'Jumanji (1995)')
-                self.assertEquals(movie[1], 'Adventure|Children\'s|Fantasy')
+                book = self.bdb.get_book(1)
+                self.assertEqual(book[0], 'Suzanne Collins')
+                self.assertEqual(book[1], '2008.0')
+                self.assertEqual(book[2], 'The Hunger Games')
 
-        def test_get_movie_null(self):
+"""        def test_get_movie_null(self):
                 self.reset_data()
                 movie = self.mdb.get_movie(20000)
                 self.assertEquals(movie, None)
@@ -111,7 +112,7 @@ class TestBookDatabase(unittest.TestCase):
                 self.reset_data()
                 rating = self.mdb.get_user_movie_rating(6030, 32)
                 self.assertEquals(rating, 5)
-
+"""
 if __name__ == "__main__":
     unittest.main()
 

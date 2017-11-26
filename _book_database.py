@@ -1,23 +1,26 @@
-# 	Roann Yanes
-# 	Python Primer
-# 	October 30, 2017
+# 	Abby Gervase, Grace Milton, and Roann Yanes
+# 	_book_database.py OOAPI
+# 	November 29, 2017
 
-class _movie_database:
+class _book_database:
 
     def __init__(self):
-        self.movies = {}
-        self.users = {}
+        self.books = {}
+        self.authors = {}
         self.ratings = {}
         self.images = {}
         self.recommendations = {}
 	
-    def load_movies(self, movie_file):
-        for line in open(movie_file, "r"):
-            self.movies[int(line.split("::")[0])] = line.strip().split("::")[1:]
+    def load_books(self, book_file):
+        file_open = open(book_file, "r")
+        for line in file_open:
+            book_line = line.strip().split(",")
+            self.books[book_line[0]] = book_line[7:10] # some books have multiple authors
+        file_open.close()
 
-    def get_movie(self, mid):
-        if mid in self.movies:
-            return (self.movies[mid])
+    def get_book(self, bid):
+        if str(bid) in self.books:
+            return (self.books[str(bid)])
         else:
             return None
 
@@ -111,3 +114,7 @@ class _movie_database:
                 return max_mid
             else:
                 i += 1
+if __name__ == "__main__":
+    bdb = _book_database()
+    bdb.load_books('book_files/books.csv')
+    print(bdb.get_book(1))
