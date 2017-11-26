@@ -12,43 +12,56 @@ class TestBookDatabase(unittest.TestCase):
                 "reset data is required because we cannot promise an order of test case execution"
                 #self.mdb.delete_all_ratings()
                 self.bdb.load_books('book_files/books.csv')
-                #self.mdb.load_users('ml-1m/users.dat')
+                self.bdb.load_genres('book_files/book_tags.csv')
                 #self.mdb.load_ratings('ml-1m/ratings.dat')
 
         def test_get_book(self):
                 self.reset_data()
-                book = self.bdb.get_book(1)
-                self.assertEqual(book[0], 'Suzanne Collins')
-                self.assertEqual(book[1], '2008.0')
+                book = self.bdb.get_book(2767052)
+                self.assertEqual(book[0][0], 'Suzanne Collins')
+                self.assertEqual(book[1], 2008)
                 self.assertEqual(book[2], 'The Hunger Games')
 
         def test_get_book_null(self):
                 self.reset_data()
                 book = self.bdb.get_book(200000000)
                 self.assertEqual(book, None)
-
-"""        def test_set_movie(self):
+        
+        def test_get_books_by_year(self):
                 self.reset_data()
-                movie = self.mdb.get_movie(2)
-                movie[0] = 'ABC'
-                self.mdb.set_movie(2, movie)
-                movie = self.mdb.get_movie(2)
-                self.assertEquals(movie[0], 'ABC')
-
-        def test_delete_movie(self):
+                year_list = self.bdb.get_books_by_year(1897)
+                self.assertEqual(year_list[0], 17245)
+                self.assertEqual(year_list[1], 17184)
+                self.assertEqual(year_list[2], 15638)
+                self.assertEqual(year_list[3], 34057)
+                self.assertEqual(year_list[4], 231560)
+                self.assertEqual(year_list[5], 8909)
+        
+        def test_get_books_by_genre(self):
                 self.reset_data()
-                self.mdb.delete_movie(2)
-                movie = self.mdb.get_movie(2)
-                self.assertEquals(movie, None)
-
-        def test_get_user(self):
+                genre_list = list(self.bdb.get_books_by_genre(15306))
+                self.assertEqual(genre_list[0], 8)
+        
+        def test_get_image(self):
                 self.reset_data()
-                user = self.mdb.get_user(3)
-                self.assertEquals(user[1], 25)
-                self.assertEquals(user[2], 15)
-                self.assertEquals(user[3], '55117')
+                image = self.bdb.get_image(41865)
+                self.assertEqual(image, "https://images.gr-assets.com/books/1361039443m/41865.jpg")
 
-        def test_set_user(self):
+        def test_set_book(self):
+                self.reset_data()
+                book = self.bdb.get_book(84847)
+                book[2] = 'Abby'
+                self.bdb.set_book(84847, book)
+                book = self.bdb.get_book(84847)
+                self.assertEqual(book[2], 'Abby')
+
+        def test_delete_book(self):
+                self.reset_data()
+                self.bdb.delete_book(8909)
+                book = self.bdb.get_book(8909)
+                self.assertEqual(book, None)
+        
+"""        def test_set_user(self):
                 self.reset_data()
                 user = self.mdb.get_user(3)
                 user[2] = 6

@@ -13,8 +13,7 @@ with the data read from the file.
 None. If no book with the specified ID is present in the object's movie data member,
 this method returns None. If the movie is present, the method returns a list of two
 strings. The first string is the movie , and the second string is the movie genre.
-4. `get_movies()` -- Returns a list of integers containing all movie IDs. Note: the list
-should contain integers (e.g., 123), not strings (e.g., '123').
+4. `get_books()` -- Returns a list of integers containing all book IDs.
 5. `set_movie(mid, [title, genres])` -- Updates the movie data member entry with
 the specified movie ID, or creates a new entry if data for the movie th that ID is not
 present. The title of the updated or new movie, and the list of its genres, are supplied

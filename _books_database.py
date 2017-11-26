@@ -1,91 +1,130 @@
 # 	Abby Gervase, Grace Milton, and Roann Yanes
-# 	_books_database.py OOAPI
+# 	_books_database.py -- OO API
 # 	November 29, 2017
+
+import collections
 
 class _books_database:
 
     def __init__(self):
         self.books = {}
-        self.authors = {}
+        self.authors = collections.defaultdict(set)
         self.ratings = {}
         self.images = {}
-        self.recommendations = {}
-	
+        self.genres = collections.defaultdict(set)
+
+    # load books from csv file into dictionaries
     def load_books(self, book_file):
         file_open = open(book_file, "r")
         for line in file_open:
             book_line = line.strip().split(",")
-            self.books[book_line[0]] = book_line[7:10] # some books have multiple authors
+            # read in when multiple authors exist
+            if book_line[7].startswith("\""):
+                author_list = []
+                # stores first author
+                author_list.append(book_line[7][1:])
+                self.authors[book_line[7][1:]].add(int(book_line[1]))
+                i = 8
+                # stores middle author
+                while not book_line[i].endswith("\""):
+                    author_list.append(book_line[i])
+                    self.authors[book_line[i]].add(int(book_line[1]))
+                    i += 1
+                # stores last author
+                author_list.append(book_line[i][:-1])
+                self.authors[book_line[i][:-1]].add(int(book_line[1]))
+                year = book_line[i + 1]
+                if year:
+                    year = int(float(year))
+                self.books[int(book_line[1])] = [author_list, year, book_line[i + 2]]
+                self.images[int(book_line[1])] = book_line[i + 15]
+            # read in when single author
+            else:
+                year = book_line[8]
+                if year:
+                    year = int(float(year))
+                self.books[int(book_line[1])] = [[book_line[7]], year, book_line[9]]
+                self.images[int(book_line[1])] = book_line[22]
+                self.authors[book_line[7]].add(int(book_line[1]))
         file_open.close()
 
+    # get book by goodreads id
     def get_book(self, bid):
-        if str(bid) in self.books:
-            return (self.books[str(bid)])
+        if bid in self.books:
+            return (self.books[bid])
         else:
             return None
 
+    # get list of all book ids
     def get_books(self):
-        return [str(x) for x in list(self.books)]
+        return [int(x) for x in list(self.books)]
 
-    def set_movie(self, mid, movies):
-        self.movies[mid] = movies
+    # sets book
+    def set_book(self, bid, books):
+        self.books[bid] = books
 
-    def delete_movie(self, mid):
-        del self.movies[mid]
+    # deletes book
+    def delete_book(self, bid):
+        del self.books[bid]
+    
+    # returns list of books published in given year
+    def get_books_by_year(self, year):
+        year_list = []
+        for bid in self.books:
+            if self.books[bid][1] == year:
+                year_list.append(bid)
+        return year_list
 
-    def load_users(self, users_file):
-        for line in open(users_file, "r"):
-            info = line.strip().split("::")
-            self.users[int(info[0])] = [info[1], int(info[2]), int(info[3]), info[4]]
-
-    def get_user(self, uid):
-        if uid in self.users:
-            return (self.users[uid])
+    # loads different genres with a list of books in each genre
+    def load_genres(self, genres_file):
+        file_open = open(genres_file, "r")
+        for line in file_open:
+            info = line.strip().split(",")
+            self.genres[int(info[1])].add(int(info[0]))
+        file_open.close()
+    
+    # returns set of books classified under a given genre
+    def get_books_by_genre(self, genre):
+        if genre in self.genres:
+            return self.genres[genre]
         else:
             return None
-   
-    def get_users(self):
-        return [int(x) for x in list(self.users)]
-
-    def set_user(self, uid, info):
-        self.users[uid] = info
-
-    def delete_user(self, uid):
-        del self.users[uid]
-
+    
     def load_ratings(self, ratings_file):
-        for line in open(ratings_file, "r"):
-            info = line.strip().split("::")
-            if int(info[1]) not in self.ratings:
-                self.ratings[int(info[1])] = {}
-            self.ratings[int(info[1])].update({int(info[0]): float(info[2])})
+        file_open = open(ratings_file, "r")
+        for line in file_open:
+            info = line.strip().split(",")
+            if int(info[0]) not in self.ratings:
+                self.ratings[int(info[0])] = {}
+            self.ratings[int(info[0])].update({int(info[1]): float(info[2])})
+        file_open.close()
 
-    def get_rating(self, mid):
-        if mid in self.ratings:
-            return sum(self.ratings[mid].values())/len(self.ratings[mid])
+    def get_rating(self, bid):
+        if bid in self.ratings:
+            return sum(self.ratings[bid].values())/len(self.ratings[bid])
         else:
             return 0
 
-    def get_highest_rated_movie(self):
+    def get_highest_rated_book(self):
         highest = 0
         top = 0
-        for mid in self.ratings:
-            if self.get_rating(int(mid)) > highest:
-                highest = self.get_rating(int(mid))
-                top = mid
-            elif self.get_rating(int(mid)) == highest and mid < top:
-                highest = self.get_rating(int(mid))
-                top = mid
+        for bid in self.ratings:
+            if self.get_rating(int(bid)) > highest:
+                highest = self.get_rating(int(bid))
+                top = bid
+            elif self.get_rating(int(bid)) == highest and bid < top:
+                highest = self.get_rating(int(bid))
+                top = bid
         if highest > 0:
             return top
         else:
             return None
    
-    def set_user_movie_rating(self, uid, mid, rating):
-        self.ratings[mid].update({uid: rating})
+    def set_user_book_rating(self, uid, bid, rating):
+        self.ratings[bid].update({uid: rating})
  
-    def get_user_movie_rating(self, uid, mid):
-        return self.ratings[mid][uid]
+    def get_user_book_rating(self, uid, bid):
+        return self.ratings[bid][uid]
 
     def delete_all_ratings(self):
         self.ratings = {}
@@ -94,9 +133,9 @@ class _books_database:
         for line in open(image_file, "r"):
             self.images[int(line.split("::")[0])] = line.strip().split("::")[2]
 
-    def get_image(self, mid):
-        if mid in self.images:
-            return (self.images[mid])
+    def get_image(self, bid):
+        if bid in self.images:
+            return (self.images[bid])
         else:
             return None
 
@@ -114,6 +153,7 @@ class _books_database:
                 return max_mid
             else:
                 i += 1
+
 if __name__ == "__main__":
     bdb = _book_database()
     bdb.load_books('book_files/books.csv')
