@@ -11,6 +11,8 @@ class _books_database:
         self.authors = collections.defaultdict(set)
         self.ratings = {}
         self.images = {}
+        self.voted_books = {}
+        self.recommendations = {}
         self.genres = collections.defaultdict(set)
 
     # load books from csv file into dictionaries
@@ -37,13 +39,15 @@ class _books_database:
                 if year:
                     year = int(float(year))
                 self.books[int(book_line[1])] = [author_list, year, book_line[i + 2]]
-                self.images[int(book_line[1])] = book_line[i + 15]
+                self.ratings[int(book_line[1])] = list(map(int, book_line[-7:-2]))
+                self.images[int(book_line[1])] = book_line[-2]
             # read in when single author
             else:
                 year = book_line[8]
                 if year:
                     year = int(float(year))
                 self.books[int(book_line[1])] = [[book_line[7]], year, book_line[9]]
+                self.ratings[int(book_line[1])] = list(map(int, book_line[-7:-2]))
                 self.images[int(book_line[1])] = book_line[22]
                 self.authors[book_line[7]].add(int(book_line[1]))
         file_open.close()
@@ -89,22 +93,21 @@ class _books_database:
             return self.genres[genre]
         else:
             return None
-    
-    def load_ratings(self, ratings_file):
-        file_open = open(ratings_file, "r")
-        for line in file_open:
-            info = line.strip().split(",")
-            if int(info[0]) not in self.ratings:
-                self.ratings[int(info[0])] = {}
-            self.ratings[int(info[0])].update({int(info[1]): float(info[2])})
-        file_open.close()
 
+    # gets the average rating of the book
     def get_rating(self, bid):
         if bid in self.ratings:
-            return sum(self.ratings[bid].values())/len(self.ratings[bid])
+            total = 0
+            total += self.ratings[bid][0]
+            total += 2*self.ratings[bid][1]
+            total += 3*self.ratings[bid][2]
+            total += 4*self.ratings[bid][3]
+            total += 5*self.ratings[bid][4]
+            return total/sum(self.ratings[bid])
         else:
             return 0
 
+    # retrieves the highest rated book
     def get_highest_rated_book(self):
         highest = 0
         top = 0
@@ -119,42 +122,47 @@ class _books_database:
             return top
         else:
             return None
-   
-    def set_user_book_rating(self, uid, bid, rating):
-        self.ratings[bid].update({uid: rating})
- 
-    def get_user_book_rating(self, uid, bid):
-        return self.ratings[bid][uid]
 
+    # updates the user's book rating
+    def set_book_rating(self, bid, rating):
+        if rating != 0:
+            if bid in self.voted_books:
+                self.ratings[bid][self.voted_books[bid] - 1] -= 1
+            self.ratings[bid][rating - 1] += 1
+            self.voted_books.update({bid: rating})
+ 
+    # gets the user's rating for a particular book 
+    def get_user_book_rating(self, bid):
+        if bid in self.voted_books:
+            return self.voted_books[bid]
+        else:
+            return None
+    
+    # deletes all the ratings
     def delete_all_ratings(self):
         self.ratings = {}
+        self.voted_books = {}
 
-    def load_images(self, image_file):
-        for line in open(image_file, "r"):
-            self.images[int(line.split("::")[0])] = line.strip().split("::")[2]
-
+    # retrieves the image url of the book cover
     def get_image(self, bid):
         if bid in self.images:
             return (self.images[bid])
         else:
             return None
 
-    def set_image(self, mid, image):
-        self.images[mid] = image
+    # sets the image url of the book cover
+    def set_image(self, bid, image):
+        self.images[bid] = image
 	
-    def get_highest_rated_unvoted_movie(self, uid):
-        for mid in self.movies:
-            self.recommendations[mid] = self.get_rating(mid)
+    # returns the highest rated unvoted book that the user has not voted on yet
+    def get_highest_rated_unvoted_book(self, num_books):
+        for bid in self.books:
+            self.recommendations[bid] = self.get_rating(bid)
         temp = sorted(self.recommendations, key=self.recommendations.get, reverse=True)
         i = 0
-        while i < len(temp):
-            max_mid = temp[i]
-            if uid not in self.ratings[max_mid]:
-                return max_mid
-            else:
-                i += 1
-
-if __name__ == "__main__":
-    bdb = _book_database()
-    bdb.load_books('book_files/books.csv')
-    print(bdb.get_books())
+        max_bid = []
+        while i < len(temp) and len(max_bid) < num_books:
+            if temp[i] not in self.voted_books:
+                max_bid.append(temp[i])
+            i += 1
+        return max_bid

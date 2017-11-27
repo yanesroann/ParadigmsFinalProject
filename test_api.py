@@ -10,10 +10,9 @@ class TestBookDatabase(unittest.TestCase):
 
         def reset_data(self):
                 "reset data is required because we cannot promise an order of test case execution"
-                #self.mdb.delete_all_ratings()
+                self.bdb.delete_all_ratings()
                 self.bdb.load_books('book_files/books.csv')
                 self.bdb.load_genres('book_files/book_tags.csv')
-                #self.mdb.load_ratings('ml-1m/ratings.dat')
 
         def test_get_book(self):
                 self.reset_data()
@@ -47,6 +46,12 @@ class TestBookDatabase(unittest.TestCase):
                 image = self.bdb.get_image(41865)
                 self.assertEqual(image, "https://images.gr-assets.com/books/1361039443m/41865.jpg")
 
+        def test_set_image(self):
+                self.reset_data()
+                self.bdb.set_image(41865, 'Grace')
+                image = self.bdb.get_image(41865)
+                self.assertEqual(image, 'Grace')
+        
         def test_set_book(self):
                 self.reset_data()
                 book = self.bdb.get_book(84847)
@@ -60,72 +65,45 @@ class TestBookDatabase(unittest.TestCase):
                 self.bdb.delete_book(8909)
                 book = self.bdb.get_book(8909)
                 self.assertEqual(book, None)
-        
-"""        def test_set_user(self):
-                self.reset_data()
-                user = self.mdb.get_user(3)
-                user[2] = 6
-                self.mdb.set_user(3, user)
-                user = self.mdb.get_user(3)
-                self.assertEquals(user[1], 25)
-                self.assertEquals(user[2], 6)
-                self.assertEquals(user[3], '55117')
-
-        def test_delete_user(self):
-                self.reset_data()
-                self.mdb.delete_user(3)
-                user = self.mdb.get_user(3)
-                self.assertEquals(user, None)
 
         def test_get_rating(self):
                 self.reset_data()
-                rating = self.mdb.get_rating(32)
-                self.assertEquals(rating, 3.945731303772336)
-                rating = self.mdb.get_rating(110)
-                self.assertEquals(rating, 4.234957020057307)
-                rating = self.mdb.get_rating(1)
-                self.assertEquals(rating, 4.146846413095811)
+                rating = self.bdb.get_rating(13152)
+                self.assertEqual(round(rating, 2), 4.08)
+                rating = self.bdb.get_rating(33313)
+                self.assertEqual(round(rating, 2), 4.0)
 
-        def test_get_highest_rated_movie_1(self):
+        def test_get_highest_rated_book(self):
                 self.reset_data()
-                hrm_mid = self.mdb.get_highest_rated_movie()
-                hrm_rating = self.mdb.get_rating(hrm_mid)
-                hrm = self.mdb.get_movie(hrm_mid)
-                hrm_name = hrm[0]
-                self.assertEquals(hrm_mid, 787)
-                self.assertEquals(hrm_name, 'Gate of Heavenly Peace, The (1995)')
-                self.assertEquals(hrm_rating, 5.0)
+                hrb_bid = self.bdb.get_highest_rated_book()
+                hrb_rating = self.bdb.get_rating(hrb_bid)
+                hrb = self.bdb.get_book(hrb_bid)
+                hrb_name = hrb[2]
+                self.assertEqual(hrb_bid, 24812)
+                self.assertEqual(hrb_name, 'The Complete Calvin and Hobbes')
+                self.assertEqual(round(hrb_rating, 2), 4.82)
 
-        def test_set_user_movie_rating_1(self):
+        def test_get_user_book_rating(self):
                 self.reset_data()
-                self.mdb.set_user_movie_rating(41, 787, 2)
-                rating = self.mdb.get_rating(787)
-                self.assertEquals(rating, 4.25)
+                rating = self.bdb.get_rating(209194)
+                self.assertEqual(rating, 4.25)
 
-        def test_set_user_movie_rating_2(self):
+        def test_set_and_get_book_ratings(self):
                 self.reset_data()
-                self.mdb.set_user_movie_rating(41, 787, 2)
-                self.mdb.set_user_movie_rating(101, 787, 4)
-                rating = self.mdb.get_rating(787)
-                self.assertEquals(rating, 4.2)
+                self.bdb.set_book_rating(5352, 5)
+                hrb_bid = self.bdb.get_highest_rated_book()
+                hrb_rating = self.bdb.get_rating(hrb_bid)
+                hrb = self.bdb.get_book(hrb_bid)
+                hrb_name = hrb[2]
+                self.assertEqual(hrb_bid, 24812)
+                self.assertEqual(hrb_name, 'The Complete Calvin and Hobbes')
+                self.assertEqual(round(hrb_rating, 2), 4.82)
 
-        def test_set_and_get_movie_ratings(self):
+        def test_get_user_book_rating(self):
                 self.reset_data()
-                self.mdb.set_user_movie_rating(41, 787, 2)
-                self.mdb.set_user_movie_rating(101, 787, 4)
-                hrm_mid = self.mdb.get_highest_rated_movie()
-                hrm_rating = self.mdb.get_rating(hrm_mid)
-                hrm = self.mdb.get_movie(hrm_mid)
-                hrm_name = hrm[0]
-                self.assertEquals(hrm_mid, 989)
-                self.assertEquals(hrm_name, 'Schlafes Bruder (Brother of Sleep) (1995)')
-                self.assertEquals(hrm_rating, 5.0)
+                rating = self.bdb.get_user_book_rating(6030)
+                self.assertEqual(rating, None)
 
-        def test_get_user_movie_rating(self):
-                self.reset_data()
-                rating = self.mdb.get_user_movie_rating(6030, 32)
-                self.assertEquals(rating, 5)
-"""
 if __name__ == "__main__":
     unittest.main()
 
