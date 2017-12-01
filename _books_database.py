@@ -97,7 +97,7 @@ class _books_database:
     # gets the average rating of the book
     def get_rating(self, bid):
         if bid in self.ratings:
-            total = 0
+total = 0
             total += self.ratings[bid][0]
             total += 2*self.ratings[bid][1]
             total += 3*self.ratings[bid][2]
