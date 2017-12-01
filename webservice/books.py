@@ -1,5 +1,6 @@
-# Abby Gervase, Grace Milton, and Roann Yanes
-# books.py
+#       Abby Gervase, Grace Milton, and Roann Yanes
+#       books.py -- Webservice
+#       November 30, 2017
 
 import cherrypy
 import re, json
@@ -10,6 +11,7 @@ class BooksController(object):
         self.bdb = bdb
         self.myd = {}
         self.myd['books'] = []
+        # Stores all books and their data in a dictionary
         for bid in bdb.books:
             entry = { "result" : "success" }
             entry["authors"] = bdb.books[bid][0]
@@ -22,10 +24,12 @@ class BooksController(object):
                 entry["img"] = "no_image.jpg"
             self.myd["books"].append(entry)
 
+    # Retrieves dictionary with all books and their data
     def GET(self):
         output = {}
         try:
             output = self.myd
+            # Reloads book dictionary in case books have been added or deleted
             self.myd['books'] = []
             for bid in self.bdb.books:
                 entry = { "result" : "success" }
@@ -44,6 +48,7 @@ class BooksController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
+    # Adds book to dictionary
     def POST(self):
         output = { "result" : "success" }
         the_body = cherrypy.request.body.read().decode()
@@ -57,7 +62,7 @@ class BooksController(object):
             if not found:
                 bid = len(self.bdb.books) + 1
             while bid in self.bdb.books:
-                bid += 1 # keep adding one new bid
+                bid += 1 # keep adding one to bid
             self.bdb.set_book(bid, book)
             self.bdb.set_image(bid, "no_image.jpg")
             entry = {"authors": the_body["authors"], "title": the_body["title"], "year": the_body["year"], "id": bid, "img": "no_image.jpg", "result": "success"}
@@ -68,6 +73,7 @@ class BooksController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
+    # Deletes all books and data
     def DELETE(self):
         output = { "result" : "success" }
         try:
@@ -84,6 +90,7 @@ class BooksController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
+    # Retrieves information for individual book
     def GET_KEY(self, key):
         output = { "result" : "success" }
         try:
@@ -102,12 +109,14 @@ class BooksController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
+    # Updates information for book
     def PUT(self, key):
         output = { "result" : "success" }
         the_body = cherrypy.request.body.read().decode()
         try:
             the_body = json.loads(the_body)
             book = [the_body["authors"], the_body["year"], the_body["title"]]
+            # If book does not exist, adds book
             if self.bdb.get_book(int(key)) == None:
                 self.bdb.set_image(int(key), "no_image.jpg")
                 entry = {"authors": the_body["authors"], "year": the_body["year"], "title": the_body["title"], "result": "success", "id": key, "img": "no_image.jpg"}
@@ -124,6 +133,7 @@ class BooksController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
+    # Deletes individual book
     def DELETE_KEY(self, key):
         output = { "result" : "success" }
         try:

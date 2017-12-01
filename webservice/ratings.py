@@ -1,5 +1,6 @@
-# Roann Yanes
-# ratings.py
+#       Abby Gervase, Grace Milton, and Roann Yanes
+#       ratings.py -- Webservice
+#       November 30, 2017
 
 import cherrypy
 import re, json
@@ -10,6 +11,7 @@ class RatingsController(object):
 		self.bdb = bdb
 		self.myd = {}
 			
+        # Gets rating for book
 	def GET(self, key):
 		output = {"result" : "success"}
 		try:	

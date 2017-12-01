@@ -1,5 +1,6 @@
-# Abby Gervase, Grace Milton, Roann Yanes
-# genres.py
+#       Abby Gervase, Grace Milton, and Roann Yanes
+#       genres.py -- Webservice
+#       November 30, 2017
 
 import cherrypy
 import re, json
@@ -10,12 +11,14 @@ class GenresController(object):
         self.bdb = bdb
         self.myd = {}
         self.myd["genres"] = []
+        # Stores genres and the list of books in each genre in a dictionary
         for genre in self.bdb.genres:
             entry = { "result" : "success" }
             entry["genre"] = genre
             entry["books"] = list(self.bdb.genres[genre])
             self.myd["genres"].append(entry)
 			
+    # Retrieves data for all genres
     def GET(self):
         output = {}
         try:
@@ -32,7 +35,7 @@ class GenresController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
-
+    # Retrieves data for individual genre
     def GET_KEY(self, key):
         output = {"result" : "success"}
         try:

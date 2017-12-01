@@ -1,5 +1,6 @@
-# Abby Gervase, Grace Milton, Roann Yanes
-# years.py
+#       Abby Gervase, Grace Milton, and Roann Yanes
+#       years.py -- Webservice
+#       November 30, 2017
 
 import cherrypy
 import re, json
@@ -9,7 +10,8 @@ class YearsController(object):
     def __init__(self, bdb=None):
         self.bdb = bdb
         self.myd = {}
-			
+
+    # Retrieves all books published in a given year			
     def GET(self, key):
         output = {"result" : "success"}
         try:

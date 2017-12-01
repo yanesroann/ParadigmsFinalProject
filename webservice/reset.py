@@ -1,5 +1,6 @@
-# Abby Gervase, Grace Milton, Roann Yanes
-# reset.py
+#       Abby Gervase, Grace Milton, and Roann Yanes
+#       reset.py -- Webservice
+#       November 30, 2017
 
 import cherrypy
 import re, json
@@ -11,6 +12,7 @@ class ResetController(object):
         self.book_file = "../ooapi/book_files/books.csv"
         self.genre_file = "../ooapi/book_files/books_tags.csv"
 
+    # Resets everything to initial state
     def PUT(self):
         output = { 'result' : 'success' }
         try:

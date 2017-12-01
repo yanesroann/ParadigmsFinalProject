@@ -1,6 +1,6 @@
 # 	Abby Gervase, Grace Milton, and Roann Yanes
-# 	_books_database.py -- OO API
-# 	November 29, 2017
+# 	_books_database.py -- Webservice
+# 	November 30, 2017
 
 import collections
 import csv
@@ -20,6 +20,7 @@ class _books_database:
     # load books from csv file into dictionaries
     def load_books(self, book_file):
         file_open = open(book_file, "r")
+
         with file_open as csvfile:
             spamreader = csv.reader(csvfile, delimiter=',', quotechar='\"')
             for line in spamreader:
@@ -40,7 +41,6 @@ class _books_database:
                 self.ratings[bid] = list(map(int, line[-7:-2]))
                 self.images[bid] = img
                 
-
         file_open.close()
 
     # get book by goodreads id

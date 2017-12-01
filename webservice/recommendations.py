@@ -1,5 +1,6 @@
-# Roann Yanes
-# recommendations.py
+#       Abby Gervase, Grace Milton, and Roann Yanes
+#       recommendations.py -- Webservice
+#       November 30, 2017
 
 import cherrypy
 import re, json
@@ -10,6 +11,7 @@ class RecommendationsController(object):
         self.bdb = bdb
         self.myd = {}
 
+    # Retrieves to read list for user; returns num number of books
     def GET(self, num):
         output = {"result" : "success"}
         try:	
@@ -20,6 +22,7 @@ class RecommendationsController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
+    # Removes all ratings and recommendations
     def DELETE(self):
         output = { "result" : "success" }
         try:
@@ -31,6 +34,7 @@ class RecommendationsController(object):
             output['message'] = str(ex)
         return json.dumps(output)
 
+    # Sends a rating for a book
     def POST(self):
         output = { "result" : "success" }
         the_body = cherrypy.request.body.read().decode()
