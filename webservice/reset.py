@@ -15,6 +15,7 @@ class ResetController(object):
         output = { 'result' : 'success' }
         try:
             self.bdb.books = {}
+            self.bdb.ratings = {}
             self.bdb.load_books(self.book_file)
             self.bdb.load_genres(self.genre_file)
         except Exception as ex:
