@@ -1,3 +1,5 @@
+# Abby Gervase, Grace Milton, and Roann Yanes
+
 import unittest
 import requests
 import json
@@ -11,7 +13,7 @@ class TestRatings(unittest.TestCase):
     RESET_URL = SITE_URL + '/reset/'
 
     def reset_data(self):
-        m = {}
+        b = {}
         r = requests.put(self.RESET_URL)
 
     def is_json(self, resp):
@@ -23,13 +25,13 @@ class TestRatings(unittest.TestCase):
 
     def test_ratings_get(self):
         self.reset_data()
-        movie_id = 32
+        book_id = 1914973
 
-        r = requests.get(self.RATINGS_URL + str(movie_id))
+        r = requests.get(self.RATINGS_URL + str(book_id))
         self.assertTrue(self.is_json(r.content.decode()))
         resp = json.loads(r.content.decode())
-        self.assertEqual(resp['rating'], 3.945731303772336)
-        self.assertEqual(resp['movie_id'], movie_id)
+        self.assertEqual(resp['rating'], 4.048714529616291)
+        self.assertEqual(resp['book_id'], book_id)
 
 if __name__ == "__main__":
     unittest.main()
