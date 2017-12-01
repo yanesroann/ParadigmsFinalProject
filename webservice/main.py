@@ -2,11 +2,13 @@
 
 import cherrypy
 import re, json
-#from reset import ResetController
+from reset import ResetController
 from books import BooksController
-#from users import UsersController
-#from recommendations import RecommendationsController
-#from ratings import RatingsController
+from recommendations import RecommendationsController
+from ratings import RatingsController
+from years import YearsController
+from genres import GenresController
+from author import AuthorController
 from _books_database import _books_database
 
 
@@ -25,41 +27,39 @@ def start_service():
 	bdb = _books_database()
 	bdb.load_books("../ooapi/book_files/books.csv")
 	bdb.load_genres("../ooapi/book_files/book_tags.csv")
-	#mdb.load_ratings("/home/paradigms/ml-1m/ratings.dat")
-	#mdb.load_images("/home/paradigms/images.dat")
+	#bdb.load_ratings("/home/paradigms/ml-1m/ratings.dat")
+	#bdb.load_images("/home/paradigms/images.dat")
 	booksController = BooksController(bdb=bdb)
-	#usersController = UsersController(mdb=mdb)
-	#recommendationsController = RecommendationsController(mdb=mdb)
-	#ratingsController = RatingsController(mdb=mdb)
-	#resetController = ResetController(mdb=mdb)
+	recommendationsController = RecommendationsController(bdb=bdb)
+	ratingsController = RatingsController(bdb=bdb)
+	resetController = ResetController(bdb=bdb)
+	authorController = AuthorController(bdb=bdb)
+	yearsController = YearsController(bdb=bdb)
+	genresController = GenresController(bdb=bdb)
 	optionsController = OptionsController(bdb=bdb)
 	dispatcher = cherrypy.dispatch.RoutesDispatcher()
 
-#	dispatcher.connect('reset_put', '/reset/', controller=resetController, action='PUT', conditions=dict(method=['PUT']))
-#	dispatcher.connect('reset_put_key', '/reset/:key', controller=resetController, action='PUT_KEY', conditions=dict(method=['PUT']))
+	dispatcher.connect('reset_put', '/reset/', controller=resetController, action='PUT', conditions=dict(method=['PUT']))
 	dispatcher.connect('books_get', '/books/', controller=booksController, action='GET', conditions=dict(method=['GET']))
 	dispatcher.connect('books_post', '/books/', controller=booksController, action='POST', conditions=dict(method=['POST']))
-#	dispatcher.connect('movies_delete', '/movies/', controller=moviesController, action='DELETE', conditions=dict(method=['DELETE']))
-#	dispatcher.connect('movies_key_get', '/movies/:key', controller=moviesController, action='GET_KEY', conditions=dict(method=['GET']))
-#	dispatcher.connect('movies_key_put', '/movies/:key', controller=moviesController, action='PUT', conditions=dict(method=['PUT']))
-#	dispatcher.connect('movies_key_delete', '/movies/:key', controller=moviesController, action='DELETE_KEY', conditions=dict(method=['DELETE']))
-#	dispatcher.connect('users_get', '/users/', controller=usersController, action='GET', conditions=dict(method=['GET']))
-#	dispatcher.connect('users_post', '/users/', controller=usersController, action='POST', conditions=dict(method=['POST']))
-#	dispatcher.connect('users_delete', '/users/', controller=usersController, action='DELETE', conditions=dict(method=['DELETE']))
-#	dispatcher.connect('users_key_get', '/users/:key', controller=usersController, action='GET_KEY', conditions=dict(method=['GET']))
-#	dispatcher.connect('users_put', '/users/:key', controller=usersController, action='PUT', conditions=dict(method=['PUT']))
-#	dispatcher.connect('users_key_delete', '/users/:key', controller=usersController, action='DELETE_KEY', conditions=dict(method=['DELETE']))
-#	dispatcher.connect('recommendations_delete', '/recommendations/', controller=recommendationsController, action='DELETE', conditions=dict(method=['DELETE']))
-#	dispatcher.connect('recommendations_get_key', '/recommendations/:key', controller=recommendationsController, action='GET', conditions=dict(method=['GET']))
-#	dispatcher.connect('recommendations_put_key', '/recommendations/:key', controller=recommendationsController, action='PUT', conditions=dict(method=['PUT']))
-#	dispatcher.connect('ratings_get', '/ratings/:key', controller=ratingsController, action='GET', conditions=dict(method=['GET']))
+	dispatcher.connect('books_delete', '/books/', controller=booksController, action='DELETE', conditions=dict(method=['DELETE']))
+	dispatcher.connect('books_key_get', '/books/:key', controller=booksController, action='GET_KEY', conditions=dict(method=['GET']))
+	dispatcher.connect('books_key_put', '/books/:key', controller=booksController, action='PUT', conditions=dict(method=['PUT']))
+	dispatcher.connect('books_key_delete', '/books/:key', controller=booksController, action='DELETE_KEY', conditions=dict(method=['DELETE']))
+	dispatcher.connect('recommendations_delete', '/recommendations/', controller=recommendationsController, action='DELETE', conditions=dict(method=['DELETE']))
+	dispatcher.connect('recommendations_get_num', '/recommendations/:num', controller=recommendationsController, action='GET', conditions=dict(method=['GET']))
+	dispatcher.connect('recommendations_post', '/recommendations/', controller=recommendationsController, action='POST', conditions=dict(method=['POST']))
+	dispatcher.connect('ratings_get', '/ratings/:key', controller=ratingsController, action='GET', conditions=dict(method=['GET']))
+	dispatcher.connect('author_get', '/authors/', controller=authorController, action='GET', conditions=dict(method=['GET']))
+	dispatcher.connect('author_key_get', '/authors/:key', controller=authorController, action='GET_KEY', conditions=dict(method=['GET']))
+	dispatcher.connect('years_get', '/years/:key', controller=yearsController, action='GET', conditions=dict(method=['GET']))
+	dispatcher.connect('genres_get', '/genres/', controller=genresController, action='GET', conditions=dict(method=['GET']))
+	dispatcher.connect('genres_key_get', '/genres/:key', controller=genresController, action='GET_KEY', conditions=dict(method=['GET']))
 
 #	dispatcher.connect('reset_put_options', '/reset/', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
 #	dispatcher.connect('reset_put_key_options', '/reset/:key', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
-#	dispatcher.connect('movies_options', '/movies/', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
-#	dispatcher.connect('movies_key_options', '/movies/:key', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
-#	dispatcher.connect('users_options', '/users/', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
-#	dispatcher.connect('users_key_options', '/users/:key', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+#	dispatcher.connect('books_options', '/books/', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
+#	dispatcher.connect('books_key_options', '/books/:key', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
 #	dispatcher.connect('recommendations_options', '/recommendations/', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
 #	dispatcher.connect('recommendations_key_options', '/recommendations/:key', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))
 #	dispatcher.connect('ratings_options', '/ratings/:key', controller=optionsController, action='OPTIONS', conditions=dict(method=['OPTIONS']))

@@ -3,12 +3,14 @@
 # 	November 29, 2017
 
 import collections
+import csv
 
 class _books_database:
 
     def __init__(self):
         self.books = {}
         self.authors = collections.defaultdict(set)
+        self.author_ids = {}
         self.ratings = {}
         self.images = {}
         self.voted_books = {}
@@ -18,38 +20,27 @@ class _books_database:
     # load books from csv file into dictionaries
     def load_books(self, book_file):
         file_open = open(book_file, "r")
-        for line in file_open:
-            book_line = line.strip().split(",")
-            # read in when multiple authors exist
-            if book_line[7].startswith("\""):
-                author_list = []
-                # stores first author
-                author_list.append(book_line[7][1:])
-                self.authors[book_line[7][1:]].add(int(book_line[1]))
-                i = 8
-                # stores middle author
-                while not book_line[i].endswith("\""):
-                    author_list.append(book_line[i])
-                    self.authors[book_line[i]].add(int(book_line[1]))
-                    i += 1
-                # stores last author
-                author_list.append(book_line[i][:-1])
-                self.authors[book_line[i][:-1]].add(int(book_line[1]))
-                year = book_line[i + 1]
-                if year:
-                    year = int(float(year))
-                self.books[int(book_line[1])] = [author_list, year, book_line[i + 2]]
-                self.ratings[int(book_line[1])] = list(map(int, book_line[-7:-2]))
-                self.images[int(book_line[1])] = book_line[-2]
-            # read in when single author
-            else:
-                year = book_line[8]
-                if year:
-                    year = int(float(year))
-                self.books[int(book_line[1])] = [[book_line[7]], year, book_line[9]]
-                self.ratings[int(book_line[1])] = list(map(int, book_line[-7:-2]))
-                self.images[int(book_line[1])] = book_line[22]
-                self.authors[book_line[7]].add(int(book_line[1]))
+        with file_open as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=',', quotechar='\"')
+            for line in spamreader:
+                authors = line[7].split(",")
+                bid = int(line[1])
+                for a in authors:
+                    if a not in self.author_ids:
+                        self.author_ids[a] = len(self.author_ids)
+                    author_id = self.author_ids[a]
+                    self.authors[author_id].add(int(bid))
+                if line[8]:
+                    year = int(float(line[8]))
+                else:
+                    year = None
+                title = line[10]
+                img = line[21]
+                self.books[bid] = [authors, year, title]
+                self.ratings[bid] = list(map(int, line[-7:-2]))
+                self.images[bid] = img
+                
+
         file_open.close()
 
     # get book by goodreads id
@@ -166,3 +157,4 @@ class _books_database:
                 max_bid.append(temp[i])
             i += 1
         return max_bid
+
