@@ -1,29 +1,126 @@
-body {
-    background-color: black;
-    color: white;
+@font-face {
+    font-family:Acme;
+    src: url(fonts/Acme-Regular.ttf);
+}
+@font-face {
+    font-family:Aaargh;
+    src: url(fonts/Aaargh.ttf);
+}
+@font-face {
+    font-family:Aleo;
+    src: url(fonts/Aleo-Regular.ttf);
+}
+@font-face {
+    font-family:Amplify;
+    src: url(fonts/Amplify.ttf);
+}
+@font-face {
+    font-family:Caviar;
+    src: url(fonts/CaviarDreams.ttf);
+}
+@font-face {
+    font-family:ChocolateRain;
+    src: url(fonts/ChocolateCoveredRaindrops.ttf);
+}
+@font-face {
+    font-family:Cartoon;
+    src: url(fonts/FromCartoonBlocks.ttf);
+}
+@font-face {
+    font-family:Lighthouse;
+    src: url(fonts/LighthousePersonalUse.ttf);
 }
 
+h1 {
+    font-family: Cartoon, Arial, sans-serif;
+    font-size: 3.5em;
+    color: #603A40;
+}
 
-#movieTitle {
+h2 {
+    font-family: Acme, Arial, sans-serif;
+    color: white;
+    margin-bottom: 3%;
+    color: #603A40;
+}
+
+body {
+    font-family: Caviar, Arial, sans-serif;
+    font-weight: bold;
+    background-color: #FCDEBE;
+    color: #440D0F;
+    padding-left:15px;
+}
+
+/*
+p{
     text-align: center;
 }
+*/
 
-#down {
-    margin-left:25%;
-    margin-right:5%;
+
+button {
+    -webkit-border-radius: 60;
+    -moz-border-radius: 60;
+    border-radius: 60px;
+    font-family: Caviar;
+    font-weight: bold;
+    color: #440d0f;
+    font-size: 10px;
+    background: #f5bfd0;
+    padding: 5px 10px 5px 10px;
+    border: solid #440d0f 1px;
+    text-decoration: none;
+    padding-left:15px;
 }
 
-#up {
-    margin-right:25%;
-    margin-left:5%;
+button:hover {
+    background: #cea0ae;
+    background-image: -webkit-linear-gradient(top, #cea0ae, #f2c2d2);
+    background-image: -moz-linear-gradient(top, #cea0ae, #f2c2d2);
+    background-image: -ms-linear-gradient(top, #cea0ae, #f2c2d2);
+    background-image: -o-linear-gradient(top, #cea0ae, #f2c2d2);
+    background-image: linear-gradient(to bottom, #cea0ae, #f2c2d2);
+    text-decoration: none;
+}
+
+select {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
+    width: 100%;
+    font-family: Caviar;
+    font-weight: bold;
+    border-radius: 100px;
+    width: 20%;
+    padding: 10px 15px;
+    background: #f5bfd0;
+    color: #440d0f;
+    border: 1px solid #440d0f;
+    padding-left:15px;
+}
+
+#bookImage{
+    max-width:200px;
+}
+
+#mainButton {
+    font-size: 15px;
+    font-family: Acme, Arial, sans-serif;
+}
+
+#rateButton {
+    font-size: 15px;
+    font-family: Acme, Arial, sans-serif;
+}
+
+#recommendButton {
+    font-size: 15px;
+    font-family: Acme, Arial, sans-serif;
 }
 
 img {
     width: 30%;
+    padding-left:15px;
 }
 
-
-#rating {
-    text-align: center;
-    margin-top: 20px;
-}

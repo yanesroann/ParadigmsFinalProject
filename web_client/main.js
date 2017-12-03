@@ -23,7 +23,7 @@ pageTitle.createLabel("Book At Me Now","pageTitle", "h1");
 pageTitle.addToDocument();
 
 var pageSubtitle = new Label();
-pageSubtitle.createLabel("A service that recommends books, hopefully","pageSubtitle","h2");
+pageSubtitle.createLabel("\"The best book recommendation service I've ever seen.\"  \u2012 Obama","pageSubtitle","h2");
 pageSubtitle.addToDocument();
 
 var bookOpts = {
@@ -89,7 +89,7 @@ var genreOpts = {
 
 
 var numBooksLabel = new Label();
-pageTitle.createLabel("How many books do you want to look at?  ","numBooksLabel", "p");
+pageTitle.createLabel("How many book recommendations do you want?  ","numBooksLabel", "p");
 pageTitle.addToDocument();
 
 var numBooks = new Dropdown();

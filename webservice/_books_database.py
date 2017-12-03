@@ -94,7 +94,7 @@ class _books_database:
             total += 3*self.ratings[bid][2]
             total += 4*self.ratings[bid][3]
             total += 5*self.ratings[bid][4]
-            return total/sum(self.ratings[bid])
+            return round(total/sum(self.ratings[bid]), 2)
         else:
             return 0
 

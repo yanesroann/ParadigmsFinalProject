@@ -68,6 +68,12 @@ function Button(){
     }
 }
 
+function Break(){
+    this.item = null;
+    var label = document.createElement("br");
+    this.item = label;
+}
+
 function Dropdown(){
     this.createDropdown = function(dict, id, selected){
         this.item = document.createElement("select");
