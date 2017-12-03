@@ -45,7 +45,7 @@ def start_service():
     dispatcher.connect('books_key_put', '/books/:key', controller=booksController, action='PUT', conditions=dict(method=['PUT']))
     dispatcher.connect('books_key_delete', '/books/:key', controller=booksController, action='DELETE_KEY', conditions=dict(method=['DELETE']))
     dispatcher.connect('recommendations_delete', '/recommendations/', controller=recommendationsController, action='DELETE', conditions=dict(method=['DELETE']))
-    dispatcher.connect('recommendations_get_num', '/recommendations/:num', controller=recommendationsController, action='GET', conditions=dict(method=['GET']))
+    dispatcher.connect('recommendations_get_num', '/recommendations/:num/:early/:late/:genre', controller=recommendationsController, action='GET', conditions=dict(method=['GET']))
     dispatcher.connect('recommendations_post', '/recommendations/', controller=recommendationsController, action='POST', conditions=dict(method=['POST']))
     dispatcher.connect('ratings_get', '/ratings/:key', controller=ratingsController, action='GET', conditions=dict(method=['GET']))
     dispatcher.connect('author_get', '/authors/', controller=authorController, action='GET', conditions=dict(method=['GET']))

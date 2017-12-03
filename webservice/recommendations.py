@@ -12,10 +12,10 @@ class RecommendationsController(object):
         self.myd = {}
 
     # Retrieves to read list for user; returns num number of books
-    def GET(self, num):
+    def GET(self, num, early, late, genre):
         output = {"result" : "success"}
         try:	
-            recommendations = self.bdb.get_highest_rated_unvoted_book(int(num))
+            recommendations = self.bdb.get_highest_rated_unvoted_book(int(num), int(early), int(late), int(genre))
             output["book_id"] = recommendations
         except Exception as ex:
             output['result'] = 'error'

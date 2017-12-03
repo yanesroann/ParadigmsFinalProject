@@ -146,7 +146,7 @@ class _books_database:
         self.images[bid] = image
 	
     # returns the highest rated unvoted book that the user has not voted on yet
-    def get_highest_rated_unvoted_book(self, num_books):
+    def get_highest_rated_unvoted_book(self, num_books, early, late, genre):
         for bid in self.books:
             self.recommendations[bid] = self.get_rating(bid)
         temp = sorted(self.recommendations, key=self.recommendations.get, reverse=True)
@@ -154,7 +154,12 @@ class _books_database:
         max_bid = []
         while i < len(temp) and len(max_bid) < num_books:
             if temp[i] not in self.voted_books:
-                max_bid.append(temp[i])
+                temp_book = self.get_book(temp[i])
+                temp_year = temp_book[1]
+                temp_genre = list(self.get_books_by_genre(int(genre)))
+                if temp_year and temp_year >= int(early) and temp_year <= int(late):
+                    if temp[i] in temp_genre:   
+                        max_bid.append(temp[i])
             i += 1
         return max_bid
 
