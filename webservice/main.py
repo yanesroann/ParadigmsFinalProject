@@ -24,7 +24,6 @@ def start_service():
 	authorController = AuthorController(bdb=bdb)
 	yearsController = YearsController(bdb=bdb)
 	genresController = GenresController(bdb=bdb)
-	optionsController = OptionsController(bdb=bdb)
 	dispatcher = cherrypy.dispatch.RoutesDispatcher()
 
 	dispatcher.connect('reset_put', '/reset/', controller=resetController, action='PUT', conditions=dict(method=['PUT']))

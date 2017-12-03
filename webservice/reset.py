@@ -10,7 +10,7 @@ class ResetController(object):
         self.myd = {}
         self.bdb = bdb
         self.book_file = "../ooapi/book_files/books.csv"
-        self.genre_file = "../ooapi/book_files/books_tags.csv"
+        self.genre_file = "../ooapi/book_files/book_tags.csv"
 
     # Resets everything to initial state
     def PUT(self):

@@ -161,5 +161,7 @@ class _books_database:
                     if temp[i] in temp_genre:   
                         max_bid.append(temp[i])
             i += 1
+        if (len(max_bid) == 0):
+            max_bid.append(-1)
         return max_bid
 

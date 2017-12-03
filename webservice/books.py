@@ -15,6 +15,10 @@ class BooksController(object):
         for bid in bdb.books:
             entry = { "result" : "success" }
             entry["authors"] = bdb.books[bid][0]
+            entry["author_ids"] = []
+            for author in entry["authors"]:
+                aid = self.bdb.author_ids[author]
+                entry["author_ids"].append(aid)
             entry["title"] = bdb.books[bid][2]
             entry["year"] = bdb.books[bid][1]
             entry["id"] = bid
@@ -34,6 +38,10 @@ class BooksController(object):
             for bid in self.bdb.books:
                 entry = { "result" : "success" }
                 entry["authors"] = self.bdb.books[bid][0]
+                entry["author_ids"] = []
+                for author in entry["authors"]:
+                    aid = self.bdb.author_ids[author]
+                    entry["author_ids"].append(aid)
                 entry["title"] = self.bdb.books[bid][2]
                 entry["year"] = self.bdb.books[bid][1]
                 entry["id"] = bid
@@ -96,6 +104,10 @@ class BooksController(object):
         try:
             book = self.bdb.get_book(int(key))
             output["authors"] = book[0]
+            output["author_ids"] = []
+            for author in output["authors"]:
+                aid = self.bdb.author_ids[author]
+                output["author_ids"].append(aid)
             output["title"] = book[2]
             output["year"] = book[1]
             image = self.bdb.get_image(int(key))
