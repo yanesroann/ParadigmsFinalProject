@@ -1,0 +1,29 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+
+#movieTitle {
+    text-align: center;
+}
+
+#down {
+    margin-left:25%;
+    margin-right:5%;
+}
+
+#up {
+    margin-right:25%;
+    margin-left:5%;
+}
+
+img {
+    width: 30%;
+}
+
+
+#rating {
+    text-align: center;
+    margin-top: 20px;
+}
