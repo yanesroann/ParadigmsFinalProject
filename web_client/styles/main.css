@@ -52,6 +52,13 @@ body {
     padding-left:15px;
 }
 
+/*
+p{
+    text-align: center;
+}
+*/
+
+
 button {
     -webkit-border-radius: 60;
     -moz-border-radius: 60;
@@ -117,3 +124,6 @@ img {
     padding-left:15px;
 }
 
+#titleButton {
+    font-size: 15px;
+}
