@@ -1,9 +1,7 @@
-// Abbgy Gervase
+// Abby Gervase, Grace Milton, Roann Yanes
 // main.js
 
 var pReq = new XMLHttpRequest();
-var mid = "32"
-var uid = "5"
 var bookURL = "http://student04.cse.nd.edu:51082/books/";
 var ratingURL = "http://student04.cse.nd.edu:51082/ratings/";
 var recommendURL = "http://student04.cse.nd.edu:51082/recommendations/";
@@ -11,21 +9,24 @@ var authorURL = "http://student04.cse.nd.edu:51082/authors/";
 var yearURL = "http://student04.cse.nd.edu:51082/years/";
 var genreURL = "http://student04.cse.nd.edu:51082/genres/";
 
-
+// instantiation of items that are used on the index.html page
 Label.prototype = new Item();
 Button.prototype = new Item();
 Image.prototype = new Item();
 Dropdown.prototype = new Item();
 Break.prototype = new Item();
 
+// adds the title of the webservice to the index.html
 var pageTitle = new Label();
 pageTitle.createLabel("Book At Me Now","pageTitle", "h1");
 pageTitle.addToDocument();
 
+// adds our tag line to the index.html page
 var pageSubtitle = new Label();
 pageSubtitle.createLabel("\"The best book recommendation service I've ever seen.\"  \u2012 Obama","pageSubtitle","h2");
 pageSubtitle.addToDocument();
 
+// dictionary of options for dropdown menu
 var bookOpts = {
     1 : "1",
     5 : "5",
@@ -37,6 +38,7 @@ var bookOpts = {
     50 : "50"
 };
 
+// dictionary of year options for dropdown menu
 var yearOpts = {
     0 : "Select Option",
     1 : "B.C.",
@@ -62,6 +64,7 @@ var yearOpts = {
     21 : "2017"
 };
 
+// dictionary of genre options for dropdown menu
 var genreOpts = {
     0 : "Select Option",
     1542 :  "Action/Adventure",
@@ -88,48 +91,59 @@ var genreOpts = {
 }
 
 
+// asks the user how many books they want displayed to them
 var numBooksLabel = new Label();
 pageTitle.createLabel("How many book recommendations do you want?  ","numBooksLabel", "p");
 pageTitle.addToDocument();
 
+// adds number of books dropdown menu
 var numBooks = new Dropdown();
 numBooks.createDropdown(bookOpts, "numBooks", 1);
 numBooks.addToDocument();
 
+// asks the user what genre
 var genreDropLabel = new Label();
 genreDropLabel.createLabel("(Optional) What genre do you want to look at?","genreDropLabel", "p");
 genreDropLabel.addToDocument();
 
+// adds genre dropdown menu
 var genreDrop = new Dropdown();
 genreDrop.createDropdown(genreOpts, "genreDrop", 0);
 genreDrop.addToDocument();
 
+// asks the user what year they want books from
 var yearDropLabel = new Label();
 yearDropLabel.createLabel("(Optional) What year range do you want to look at?","yearDropLabel", "p");
 yearDropLabel.addToDocument();
 
+// adds year dropdown menu
 var yearDrop = new Dropdown();
 yearDrop.createDropdown(yearOpts, "yearDrop", 0);
 yearDrop.addToDocument();
 
+// adds break (new line)
 var break1 = new Break();
 break1.addToDocument();
 
+// adds break (new line)
 var break2 = new Break();
 break2.addToDocument();
 
+// adds a button that takes the user to the rate page
 var rateButton = new Button();
 rateButton.createButton("Rate Books", "rateButton");
 rateButton.addToDocument();
 rateButton.addClickEventHandler(goToPage, "rate.html");
 
-
+// adds a button that takes the user to the reccomend page
 var recommendButton = new Button();
 recommendButton.createButton("Get Recommended Books", "recommendButton");
 recommendButton.addToDocument();
 recommendButton.addClickEventHandler(goToPage, "recommend.html");
 
+// function to see what user selected from the home page and take user to a different page on button click
 function goToPage(url){
+    // retrieves selected from the cookies
     var cookie = document.cookie.split(';');
     for (var i = 0; i < cookie.length; i++) {
         var chip = cookie[i],
@@ -137,24 +151,29 @@ function goToPage(url){
         name = entry[0];
         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
+    // retrieves the option selected by the user from the dropdown menu
     var booknum = String(numBooks.getSelected());
     var genrenum = String(genreDrop.getSelected());
     if (genrenum==0){ genrenum=30574;}
     var yearnum = yearDrop.getSelected();
     var early, late, years;
+    // splits the year to retrieve the books from the book database within the range
     if(yearnum>1){
         var years = yearOpts[yearnum].split('-');
         var early = years[0];
         var late = years[1];
     }
+    // if the user selects bc
     else if (yearnum==1){
         early = -5000;
         late = -1;
     }
+    // if the user does not select a year range
     else{
         early = -5000;
         late = 2017;
     }
+    // sets the user's choice in the cookies
     document.cookie=booknum+","+genrenum+","+early+","+late;
     location.href = url;    
 }
